@@ -1,0 +1,1032 @@
+{
+  "account set": [
+    {
+      "FullName": "subscription",
+      "ShortName": "s",
+      "IsRequired": true,
+      "Description": "Name or ID of subscription. "
+    }
+  ],
+  "account show": [
+    {
+      "FullName": "sdk-auth",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Output result to a file compatible with Azure SDK auth. Only applicable when authenticating with a Service Principal."
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "s",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. "
+    }
+  ],
+  "acr create": [
+    {
+      "FullName": "resource-group",
+      "ShortName": "g",
+      "IsRequired": true,
+      "Description": "Name of resource group. You can configure the default group using `az configure --defaults group=<name>`."
+    },
+    {
+      "FullName": "admin-enabled",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Indicates whether the admin user is enabled. Allowed values: false, true."
+    },
+    {
+      "FullName": "location",
+      "ShortName": "l",
+      "IsRequired": false,
+      "Description": "Location. Values from: `az account list-locations`. You can configure the default location using `az configure --defaults location=<location>`. Config: westeurope."
+    },
+    {
+      "FullName": "tags",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Space-separated tags: key[=value] [key[=value] ...]. Use \"\" to clear existing tags."
+    },
+    {
+      "FullName": "identity",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Use assigned managed identity resource id or name if in the same resource group."
+    },
+    {
+      "FullName": "key-encryption-key",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Key vault key uri. "
+    },
+    {
+      "FullName": "default-action",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Default action to apply when no rule matches. Only applicable to Premium SKU. Allowed values: Allow, Deny."
+    },
+    {
+      "FullName": "public-network-enabled",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Allow public network access for the container registry. The Default is allowed. Allowed values: false, true. "
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "acr repository show-tags": [
+    {
+      "FullName": "repository",
+      "ShortName": "",
+      "IsRequired": true,
+      "Description": "The name of the repository."
+    },
+    {
+      "FullName": "detail",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Show detailed information."
+    },
+    {
+      "FullName": "orderby",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Order the items in the results. Default to alphabetical order of names. Allowed values: time_asc, time_desc."
+    },
+    {
+      "FullName": "password",
+      "ShortName": "p",
+      "IsRequired": false,
+      "Description": "The password used to log into a container registry."
+    },
+    {
+      "FullName": "suffix",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The tenant suffix in registry login server. You may specify '--suffix tenant' if your registry login server is in the format 'registry- tenant.azurecr.io'. Applicable if you're accessing the registry from a different subscription or you have permission to access images but not the permission to manage the registry resource."
+    },
+    {
+      "FullName": "top",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Limit the number of items in the results."
+    },
+    {
+      "FullName": "username",
+      "ShortName": "u",
+      "IsRequired": false,
+      "Description": "The username used to log into a container registry. "
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "acr task create": [
+    {
+      "FullName": "arg",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Build argument in '--arg name[=value]' format. Multiples supported by passing '--arg` multiple times."
+    },
+    {
+      "FullName": "assign-identity",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Assigns managed identities to the task. Use '[system]' to refer to the system-assigned identity or a resource ID to refer to a user-assigned identity. Please see https://aka.ms/acr/tasks/task-create-managed-identity for more information."
+    },
+    {
+      "FullName": "auth-mode",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Auth mode of the source registry. Allowed values: Default, None."
+    },
+    {
+      "FullName": "cmd",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Commands to execute."
+    },
+    {
+      "FullName": "cpu",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The CPU configuration in terms of number of cores required for the run. Default: 2."
+    },
+    {
+      "FullName": "file",
+      "ShortName": "f",
+      "IsRequired": false,
+      "Description": "Relative path of the the task/docker file to the source code root folder. Task files must be suffixed with '.yaml' or piped from the standard input using '-'."
+    },
+    {
+      "FullName": "image",
+      "ShortName": "t",
+      "IsRequired": false,
+      "Description": "The name and tag of the image using the format: '-t repo/image:tag'. Multiple tags are supported by passing -t multiple times."
+    },
+    {
+      "FullName": "no-cache",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Indicates whether the image cache is enabled. Allowed values: false, true."
+    },
+    {
+      "FullName": "no-push",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Indicates whether the image built should be pushed to the registry. Allowed values: false, true."
+    },
+    {
+      "FullName": "platform",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The platform where build/task is run, Eg, 'windows' and 'linux'. When it's used in build commands, it also can be specified in 'os/arch/variant' format for the resulting image. Eg, linux/arm/v7. The 'arch' and 'variant' parts are optional."
+    },
+    {
+      "FullName": "resource-group",
+      "ShortName": "g",
+      "IsRequired": false,
+      "Description": "Name of resource group. You can configure the default group using `az configure --defaults group=<name>`."
+    },
+    {
+      "FullName": "secret-arg",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Secret build argument in '--secret-arg name[=value]' format. Multiples supported by passing --secret-arg multiple times."
+    },
+    {
+      "FullName": "set",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Task value in '--set name[=value]' format. Multiples supported by passing --set multiple times."
+    },
+    {
+      "FullName": "set-secret",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Secret task value in '--set-secret name[=value]' format. Multiples supported by passing --set-secret multiple times."
+    },
+    {
+      "FullName": "status",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The current status of task. Allowed values: Disabled, Enabled. Default: Enabled."
+    },
+    {
+      "FullName": "target",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The name of the target build stage."
+    },
+    {
+      "FullName": "timeout",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The timeout in seconds. Default: 3600."
+    },
+    {
+      "FullName": "values",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The task values/parameters file path relative to the source context. "
+    },
+    {
+      "FullName": "base-image-trigger-enabled",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Indicates whether the base image trigger is enabled. Allowed values: false, true. Default: 1."
+    },
+    {
+      "FullName": "base-image-trigger-name",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The name of the base image trigger. Default: defaultBaseimageTriggerName."
+    },
+    {
+      "FullName": "base-image-trigger-type",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The type of the auto trigger for base image dependency updates. Allowed values: All, Runtime. Default: Runtime."
+    },
+    {
+      "FullName": "commit-trigger-enabled",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Indicates whether the source control commit trigger is enabled. Allowed values: false, true. Default: 1."
+    },
+    {
+      "FullName": "git-access-token",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The access token used to access the source control provider."
+    },
+    {
+      "FullName": "pull-request-trigger-enabled",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Indicates whether the source control pull request trigger is enabled. The trigger is disabled by default. Allowed values: false, true."
+    },
+    {
+      "FullName": "schedule",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Schedule for a timer trigger represented as a cron expression. An optional trigger name can be specified using `--schedule name:schedule` format. Multiples supported by passing --schedule multiple times."
+    },
+    {
+      "FullName": "source-trigger-name",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The name of the source trigger. Default: defaultSourceTriggerName."
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "acr task credential add": [
+    {
+      "FullName": "login-server",
+      "ShortName": "",
+      "IsRequired": true,
+      "Description": "The login server of the custom registry. For instance, 'myregistry.azurecr.io'."
+    },
+    {
+      "FullName": "password",
+      "ShortName": "p",
+      "IsRequired": false,
+      "Description": "The password to login to the custom registry. This can be plain text or a key vault secret URI."
+    },
+    {
+      "FullName": "resource-group",
+      "ShortName": "g",
+      "IsRequired": false,
+      "Description": "Name of resource group. You can configure the default group using `az configure --defaults group=<name>`."
+    },
+    {
+      "FullName": "use-identity",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The task managed identity used for the credential. Use '[system]' to refer to the system-assigned identity or a client id to refer to a user-assigned identity. Please see https://aka.ms/acr/tasks/cross- registry-authentication for more information."
+    },
+    {
+      "FullName": "username",
+      "ShortName": "u",
+      "IsRequired": false,
+      "Description": "The username to login to the custom registry. This can be plain text or a key vault secret URI. "
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "acr task run": [
+    {
+      "FullName": "arg",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Build argument in '--arg name[=value]' format. Multiples supported by passing '--arg` multiple times."
+    },
+    {
+      "FullName": "context",
+      "ShortName": "c",
+      "IsRequired": false,
+      "Description": "The full URL to the source code repository (Requires '.git' suffix for a github repo). If '/dev/null' is specified, the value will be set to None and ignored."
+    },
+    {
+      "FullName": "file",
+      "ShortName": "f",
+      "IsRequired": false,
+      "Description": "Relative path of the the task/docker file to the source code root folder. Task files must be suffixed with '.yaml' or piped from the standard input using '-'."
+    },
+    {
+      "FullName": "no-logs",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Do not show logs after successfully queuing the build."
+    },
+    {
+      "FullName": "no-wait",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Do not wait for the run to complete and return immediately after queuing the run."
+    },
+    {
+      "FullName": "resource-group",
+      "ShortName": "g",
+      "IsRequired": false,
+      "Description": "Name of resource group. You can configure the default group using `az configure --defaults group=<name>`."
+    },
+    {
+      "FullName": "secret-arg",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Secret build argument in '--secret-arg name[=value]' format. Multiples supported by passing --secret-arg multiple times."
+    },
+    {
+      "FullName": "set",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Task value in '--set name[=value]' format. Multiples supported by passing --set multiple times."
+    },
+    {
+      "FullName": "set-secret",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Secret task value in '--set-secret name[=value]' format. Multiples supported by passing --set-secret multiple times."
+    },
+    {
+      "FullName": "target",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The name of the target build stage."
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "acr task show": [
+    {
+      "FullName": "registry",
+      "ShortName": "r",
+      "IsRequired": true,
+      "Description": "The name of the container registry. You can configure the default registry name using `az configure --defaults acr=<registry name>`."
+    },
+    {
+      "FullName": "resource-group",
+      "ShortName": "g",
+      "IsRequired": false,
+      "Description": "Name of resource group. You can configure the default group using `az configure --defaults group=<name>`."
+    },
+    {
+      "FullName": "with-secure-properties",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Indicates whether the secure properties of a task should be returned. "
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "acr token create": [
+    {
+      "FullName": "registry",
+      "ShortName": "r",
+      "IsRequired": true,
+      "Description": "The name of the container registry. You can configure the default registry name using `az configure --defaults acr=<registry name>`."
+    },
+    {
+      "FullName": "expiration",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "UTC time for which the credentials will be valid. In the format of %Y-%m-%dT%H:%M:%SZ, e.g. 2025-12-31T12:59:59Z."
+    },
+    {
+      "FullName": "expiration-in-days",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Number of days for which the credentials will be valid. If not specified, the expiration will default to the max value \"9999-12-31T23:59:59.999999+00:00\"."
+    },
+    {
+      "FullName": "no-passwords",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Do not generate passwords, instead use \"az acr token credential generate\". Allowed values: false, true."
+    },
+    {
+      "FullName": "repository",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Repository permissions. Use the format \"--repository REPO [ACTION1 ACTION2 ...]\" per flag. Valid actions are {'content/read', 'content/write', 'metadata/write', 'content/delete', 'metadata/read'}."
+    },
+    {
+      "FullName": "resource-group",
+      "ShortName": "g",
+      "IsRequired": false,
+      "Description": "Name of resource group. You can configure the default group using `az configure --defaults group=<name>`."
+    },
+    {
+      "FullName": "scope-map",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The name of the scope map with pre-configured repository permissions. Use \"--repository\" if you would like CLI to configure one for you."
+    },
+    {
+      "FullName": "status",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The status of the token. Allowed values: disabled, enabled. Default: enabled. "
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "container show": [
+    {
+      "FullName": "ids",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "One or more resource IDs (space-delimited). It should be a complete resource ID containing all information of 'Resource Id' arguments. You should provide either --ids or other 'Resource Id' arguments."
+    },
+    {
+      "FullName": "name",
+      "ShortName": "n",
+      "IsRequired": false,
+      "Description": "The name of the container group."
+    },
+    {
+      "FullName": "resource-group",
+      "ShortName": "g",
+      "IsRequired": false,
+      "Description": "Name of resource group. You can configure the default group using `az configure --defaults group=<name>`."
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`. "
+    }
+  ],
+  "container create": [
+    {
+      "FullName": "command-line",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The command line to run when the container is started, e.g. '/bin/bash -c myscript.sh'."
+    },
+    {
+      "FullName": "cpu",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The required number of CPU cores of the containers, accurate to one decimal place. Default: 1."
+    },
+    {
+      "FullName": "dns-name-label",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The dns name label for container group with public IP."
+    },
+    {
+      "FullName": "environment-variables",
+      "ShortName": "e",
+      "IsRequired": false,
+      "Description": "A list of environment variable for the container. Space- separated values in 'key=value' format."
+    },
+    {
+      "FullName": "file",
+      "ShortName": "f",
+      "IsRequired": false,
+      "Description": "The path to the input file."
+    },
+    {
+      "FullName": "image",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The container image name."
+    },
+    {
+      "FullName": "ip-address",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The IP address type of the container group. Allowed values: Private, Public."
+    },
+    {
+      "FullName": "location",
+      "ShortName": "l",
+      "IsRequired": false,
+      "Description": "Location. Values from: `az account list-locations`. You can configure the default location using `az configure --defaults location=<location>`. Config: westeurope."
+    },
+    {
+      "FullName": "memory",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The required memory of the containers in GB, accurate to one decimal place. Default: 1.5."
+    },
+    {
+      "FullName": "name",
+      "ShortName": "n",
+      "IsRequired": false,
+      "Description": "The name of the container group."
+    },
+    {
+      "FullName": "no-wait",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Do not wait for the long-running operation to finish."
+    },
+    {
+      "FullName": "os-type",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The OS type of the containers. Allowed values: Linux, Windows. Default: Linux."
+    },
+    {
+      "FullName": "ports",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The ports to open. Default: [80]."
+    },
+    {
+      "FullName": "protocol",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The network protocol to use. Allowed values: TCP, UDP."
+    },
+    {
+      "FullName": "restart-policy",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Restart policy for all containers within the container group. Allowed values: Always, Never, OnFailure. Default: Always."
+    },
+    {
+      "FullName": "secrets",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Space-separated secrets in 'key=value' format."
+    },
+    {
+      "FullName": "secrets-mount-path",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The path within the container where the secrets volume should be mounted. Must not contain colon ':'."
+    },
+    {
+      "FullName": "secure-environment-variables",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "A list of secure environment variable for the container. Space-separated values in 'key=value' format. "
+    },
+    {
+      "FullName": "azure-file-volume-account-key",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The storage account access key used to access the Azure File share."
+    },
+    {
+      "FullName": "azure-file-volume-account-name",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The name of the storage account that contains the Azure File share."
+    },
+    {
+      "FullName": "azure-file-volume-mount-path",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The path within the container where the azure file volume should be mounted. Must not contain colon ':'."
+    },
+    {
+      "FullName": "azure-file-volume-share-name",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The name of the Azure File share to be mounted as a volume. "
+    },
+    {
+      "FullName": "gitrepo-dir",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The target directory path in the git repository. Must not contain '..'. Default: .."
+    },
+    {
+      "FullName": "gitrepo-mount-path",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The path within the container where the git repo volume should be mounted. Must not contain colon ':'."
+    },
+    {
+      "FullName": "gitrepo-revision",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The commit hash for the specified revision."
+    },
+    {
+      "FullName": "gitrepo-url",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The URL of a git repository to be mounted as a volume. "
+    },
+    {
+      "FullName": "registry-login-server",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The container image registry login server."
+    },
+    {
+      "FullName": "registry-password",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The password to log in container image registry server."
+    },
+    {
+      "FullName": "registry-username",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The username to log in container image registry server. "
+    },
+    {
+      "FullName": "log-analytics-workspace",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The Log Analytics workspace name or id. Use the current subscription or use --subscription flag to set the desired subscription."
+    },
+    {
+      "FullName": "log-analytics-workspace-key",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The Log Analytics workspace key. "
+    },
+    {
+      "FullName": "assign-identity",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Space-separated list of assigned identities. Assigned identities are either user assigned identities (resource IDs) and / or the system assigned identity ('[system]'). See examples for more info."
+    },
+    {
+      "FullName": "role",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Role name or id the system assigned identity will have. Default: Contributor."
+    },
+    {
+      "FullName": "scope",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Scope that the system assigned identity can access. "
+    },
+    {
+      "FullName": "network-profile",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The network profile name or id."
+    },
+    {
+      "FullName": "subnet",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The name of the subnet when creating a new VNET or referencing an existing one. Can also reference an existing subnet by ID."
+    },
+    {
+      "FullName": "subnet-address-prefix",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The subnet IP address prefix to use when creating a new VNET in CIDR format. Default: 10.0.0.0/24."
+    },
+    {
+      "FullName": "vnet",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The name of the VNET when creating a new one or referencing an existing one. Can also reference an existing vnet by ID. This allows using vnets from other resource groups."
+    },
+    {
+      "FullName": "vnet-address-prefix",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The IP address prefix to use when creating a new VNET in CIDR format. Default: 10.0.0.0/16. "
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "group create": [
+    {
+      "FullName": "location",
+      "ShortName": "l",
+      "IsRequired": false,
+      "Description": "Location. Values from: `az account list-locations`. You can configure the default location using `az configure --defaults location=<location>`. Config: westeurope."
+    },
+    {
+      "FullName": "managed-by",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "The ID of the resource that manages this resource group."
+    },
+    {
+      "FullName": "tags",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Space-separated tags: key[=value] [key[=value] ...]. Use \"\" to clear existing tags. "
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "group show": [
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "keyvault create": [
+    {
+      "FullName": "enable-purge-protection",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Property specifying whether protection against purge is enabled for this vault. Setting this property to true activates protection against purge for this vault and its content - only the Key Vault service may initiate a hard, irrecoverable deletion. The setting is effective only if soft delete is also enabled. Enabling this functionality is irreversible - that is, the property does not accept false as its value. Allowed values: false, true."
+    },
+    {
+      "FullName": "enabled-for-deployment",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Property to specify whether Azure Virtual Machines are permitted to retrieve certificates stored as secrets from the key vault. Allowed values: false, true."
+    },
+    {
+      "FullName": "enabled-for-disk-encryption",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Property to specify whether Azure Disk Encryption is permitted to retrieve secrets from the vault and unwrap keys. Allowed values: false, true."
+    },
+    {
+      "FullName": "enabled-for-template-deployment",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Property to specify whether Azure Resource Manager is permitted to retrieve secrets from the key vault. Allowed values: false, true."
+    },
+    {
+      "FullName": "location",
+      "ShortName": "l",
+      "IsRequired": false,
+      "Description": "Location. Values from: `az account list-locations`. You can configure the default location using `az configure"
+    },
+    {
+      "FullName": "no-self-perms",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Don't add permissions for the current user/service principal in the new vault. Allowed values: false, true."
+    },
+    {
+      "FullName": "retention-days",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Soft delete data retention days. It accepts >=7 and <=90. Default: 90."
+    },
+    {
+      "FullName": "sku",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Required. SKU details. Allowed values: premium, standard. Default: standard."
+    },
+    {
+      "FullName": "tags",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Space-separated tags: key[=value] [key[=value] ...]. Use \"\" to clear existing tags. "
+    },
+    {
+      "FullName": "bypass",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Bypass traffic for space-separated uses. Allowed values: AzureServices, None."
+    },
+    {
+      "FullName": "default-action",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Default action to apply when no rule matches. Allowed values: Allow, Deny."
+    },
+    {
+      "FullName": "network-acls",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Network ACLs. It accepts a JSON filename or a JSON string. JSON format: `{\\\"ip\\\":[<ip1>, <ip2>...],\\\"vnet\\\" :[<vnet_name_1>/<subnet_name_1>,<subnet_id2>...]}`."
+    },
+    {
+      "FullName": "network-acls-ips",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Network ACLs IP rules. Space-separated list of IP addresses."
+    },
+    {
+      "FullName": "network-acls-vnets",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Network ACLS VNet rules. Space-separated list of Vnet/subnet pairs or subnet resource ids. "
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "keyvault secret set": [
+    {
+      "FullName": "description",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Description of the secret contents (e.g. password, connection string, etc)."
+    },
+    {
+      "FullName": "disabled",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Create secret in disabled state. Allowed values: false, true."
+    },
+    {
+      "FullName": "expires",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Expiration UTC datetime (Y-m-d'T'H:M:S'Z')."
+    },
+    {
+      "FullName": "not-before",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Key not usable before the provided UTC datetime (Y-m-d'T'H:M:S'Z')."
+    },
+    {
+      "FullName": "tags",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Space-separated tags: key[=value] [key[=value] ...]. Use \"\" to clear existing tags. "
+    },
+    {
+      "FullName": "encoding",
+      "ShortName": "e",
+      "IsRequired": false,
+      "Description": "Source file encoding. The value is saved as a tag (`file- encoding=<val>`) and used during download to automatically encode the resulting file. Allowed values: ascii, base64, hex, utf-16be, utf-16le, utf-8. Default: utf-8."
+    },
+    {
+      "FullName": "file",
+      "ShortName": "f",
+      "IsRequired": false,
+      "Description": "Source file for secret. Use in conjunction with '--encoding'."
+    },
+    {
+      "FullName": "value",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Plain text secret value. Cannot be used with '--file' or '--encoding'. "
+    },
+    {
+      "FullName": "vault-name",
+      "ShortName": "",
+      "IsRequired": true,
+      "Description": "Name of the key vault. "
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "keyvault set-policy": [
+    {
+      "FullName": "resource-group",
+      "ShortName": "g",
+      "IsRequired": false,
+      "Description": "Proceed only if Key Vault belongs to the specified resource group."
+    },
+    {
+      "FullName": "spn",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name of a service principal that will receive permissions."
+    },
+    {
+      "FullName": "upn",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name of a user principal that will receive permissions. "
+    },
+    {
+      "FullName": "certificate-permissions",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Space-separated list of certificate permissions to assign. Allowed values: backup, create, delete, deleteissuers, get, getissuers, import, list, listissuers, managecontacts, manageissuers, purge, recover, restore, setissuers, update."
+    },
+    {
+      "FullName": "key-permissions",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Space-separated list of key permissions to assign. Allowed values: backup, create, decrypt, delete, encrypt, get, import, list, purge, recover, restore, sign, unwrapKey, update, verify, wrapKey."
+    },
+    {
+      "FullName": "object-id",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "A GUID that identifies the principal that will receive permissions."
+    },
+    {
+      "FullName": "secret-permissions",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Space-separated list of secret permissions to assign. Allowed values: backup, delete, get, list, purge, recover, restore, set."
+    },
+    {
+      "FullName": "storage-permissions",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Space-separated list of storage permissions to assign. Allowed values: backup, delete, deletesas, get, getsas, list, listsas, purge, recover, regeneratekey, restore, set, setsas, update. "
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ],
+  "role assignment create": [
+    {
+      "FullName": "assignee",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Represent a user, group, or service principal. supported format: object id, user sign-in name, or service principal name."
+    },
+    {
+      "FullName": "assignee-object-id",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Use this parameter instead of '--assignee' to bypass graph permission issues. This parameter only works with object ids for users, groups, service principals, and managed identities. For managed identities use the principal id. For service principals, use the object id and not the app id."
+    },
+    {
+      "FullName": "assignee-principal-type",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Use with --assignee-object-id to avoid errors caused by propagation latency in AAD Graph. Allowed values: Application, DirectoryObjectOrGroup, DirectoryRoleTemplate, Everyone, ForeignGroup, Group, MSI, ServicePrincipal, Unknown, User."
+    },
+    {
+      "FullName": "resource-group",
+      "ShortName": "g",
+      "IsRequired": false,
+      "Description": "Use it only if the role or assignment was added at the level of a resource group."
+    },
+    {
+      "FullName": "scope",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Scope at which the role assignment or definition applies to, e.g., /subscriptions/0b1f6471-1bf0-4dda-aec3-111122223333, /subscriptions/0b1f6471-1bf0-4dda- aec3-111122223333/resourceGroups/myGroup, or /subscriptions/0b1f6471-1bf0-4dda-aec3-111122223333/resourceGroups/m yGroup/providers/Microsoft.Compute/virtualMachines/myVM. "
+    },
+    {
+      "FullName": "subscription",
+      "ShortName": "",
+      "IsRequired": false,
+      "Description": "Name or ID of subscription. You can configure the default subscription using `az account set -s NAME_OR_ID`."
+    }
+  ]
+}
