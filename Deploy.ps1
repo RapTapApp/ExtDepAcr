@@ -103,7 +103,6 @@ $__ACR_TARGET = 'SutAcrTarget'
 $__ACR_TARGET_RG = "$__ACR_TARGET-rg"
 $__ACR_TARGET_TASK = "$__ACR_TARGET-task"
 $__ACR_TARGET_GIT = 'https://github.com/RapTapApp/ExtDepAcr-2-Target.git#main'
-$__ACR_TARGET_URL = "$__ACR_TARGET.azurecr.io"
 $__ACR_TARGET_USER = "$__ACR_TARGET-user"
 $__ACR_TARGET_PASS = "$__ACR_TARGET-pass"
 $__ACR_TARGET_REPO = 'my-app-repo'
@@ -541,7 +540,7 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --registry $__ACR_TARGET `
         --name $__ACR_TARGET_TASK `
         --assign-identity '[system]' `
-        --Context "$__ACR_TARGET_GIT" `
+        --context "$__ACR_TARGET_GIT" `
         --git-access-token "$__GIT_TOKEN_VALUE" `
         --file $__ACR_TASK_YAML `
         --set "FROM_REGISTRY_URL=$__ACR_IMPORT_URL/" `
