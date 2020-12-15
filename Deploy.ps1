@@ -74,7 +74,7 @@ $__AKV_RG = "$__AKV-rg"
 
 # define Git-token constants
 $__GIT_TOKEN = 'Sut-Git-token'
-$__GIT_TOKEN_VALUE = '4c8152476a10fbcda11309d986aea347bb9f751b'
+$__GIT_TOKEN_VALUE = $(Get-Content -LiteralPath "$PSCommandPath.key" -Raw).Trim()
 
 # define container-registry constants
 $__ACR_DOCKER_URL = 'docker.io'
@@ -333,14 +333,16 @@ Invoke-Step -When 5 -DoTitle 'Creating container-registry: Public' -DoScript {
         --resource-group $__ACR_PUBLIC_RG `
         --registry $__ACR_PUBLIC `
         --name $__ACR_PUBLIC_TASK `
+        --assign-identity '[system]' `
         --context "$__ACR_PUBLIC_GIT" `
         --git-access-token $__GIT_TOKEN_VALUE `
-        --assign-identity '[system]' `
         --commit-trigger-enabled true `
         --base-image-trigger-enabled false `
         --file $__ACR_TASK_YAML `
         --set "FROM_REGISTRY_URL=$__ACR_DOCKER_URL/" `
-        --query 'name' | Write-Info -Color DarkGray
+        --image 'node:15-alpine' `
+        --image 'node:15-alpine-{{.Run.ID}}' |
+        Write-Info -Color Magenta
 
 
 
@@ -414,14 +416,16 @@ Invoke-Step -When 6 -DoTitle 'Creating container-registry: Import' -DoScript {
         --resource-group $__ACR_IMPORT_RG `
         --registry $__ACR_IMPORT `
         --name $__ACR_IMPORT_TASK `
+        --assign-identity '[system]' `
         --context "$__ACR_IMPORT_GIT" `
         --git-access-token "$__GIT_TOKEN_VALUE" `
-        --assign-identity '[system]' `
-        --commit-trigger-enabled false `
+        --commit-trigger-enabled true `
         --base-image-trigger-enabled true `
         --file $__ACR_TASK_YAML `
         --set "FROM_REGISTRY_URL=$__ACR_PUBLIC_URL/" `
-        --query 'name' | Write-Info -Color DarkGray
+        --image 'node:15-alpine' `
+        --image 'node:15-alpine-{{.Run.ID}}' |
+        Write-Info -Color Magenta
 
     AzCli acr task credential add `
         --subscription $__SUBSCRIPTION `
@@ -536,9 +540,9 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --resource-group $__ACR_TARGET_RG `
         --registry $__ACR_TARGET `
         --name $__ACR_TARGET_TASK `
-        --context "$__ACR_TARGET_GIT" `
-        --git-access-token "$__GIT_TOKEN_VALUE" `
         --assign-identity '[system]' `
+        --Context "$__ACR_TARGET_GIT" `
+        --git-access-token "$__GIT_TOKEN_VALUE" `
         --file $__ACR_TASK_YAML `
         --set "FROM_REGISTRY_URL=$__ACR_IMPORT_URL/" `
         --set "TARGET_IMAGEREPO=$__ACR_TARGET_REPO" `
@@ -548,7 +552,8 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --set "ACI_LOC=$__ACI_LOC" `
         --set "ACI_RG=$__ACI_RG" `
         --set "ACI_NAME=$__ACI_NAME" `
-        --query 'name' | Write-Info -Color DarkGray
+        --image '{{.Values.TARGET_IMAGEREPO}}:{{.Run.ID}}' |
+        Write-Info -Color Magenta
 
     AzCli acr task credential add `
         --subscription $__SUBSCRIPTION `
