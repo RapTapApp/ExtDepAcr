@@ -116,14 +116,18 @@ function Write-LogLine {
         $__Timestamp = [datetime]::UtcNow
 
         if ($__State.LogLine_IsWritten) {
-            $__Duration = ''
 
             if ($__State.LogLine_Previous -ne [datetime]::MinValue) {
                 $__TotalSeconds = $__Timestamp.Subtract($__State.LogLine_Previous).TotalSeconds
-                $__Duration = ' ({0,8:N2} sec)' -f [Math]::Round($__TotalSeconds, 2)
+
+                $__TotalSeconds = [Math]::Round($__TotalSeconds, 2)
+                if ($__TotalSeconds -gt 0.01) {
+                    $__Duration = ' ({0:N2} sec)' -f $__TotalSeconds
+                    Write-Info -Message (' {0,8}' -f $__Duration) -Color DarkGray -NoNewline
+                }
             }
 
-            Write-Info -Message "$__Duration => " -NoNewline
+            Write-Info -Message ' => ' -NoNewline
         }
 
         Write-Info @PSBoundParameters

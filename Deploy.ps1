@@ -298,13 +298,13 @@ Invoke-Step -When 5 -DoTitle 'Creating container-registry: Public' -DoScript {
         --resource-group $__ACR_PUBLIC_RG `
         --registry $__ACR_PUBLIC `
         --name $__ACR_PUBLIC_TASK `
-        --file $__ACR_TASK_YAML `
         --context $__ACR_PUBLIC_GIT `
         --git-access-token $__GIT_TOKEN_VALUE `
-        --set FROM_REGISTRY_URL=$__ACR_DOCKER_URL/ `
-        --assign-identity `
+        --assign-identity '[system]' `
         --commit-trigger-enabled true `
-        --base-image-trigger-enabled false
+        --base-image-trigger-enabled false `
+        --file $__ACR_TASK_YAML `
+        --set "FROM_REGISTRY_URL=$__ACR_DOCKER_URL/"
 
 
 
@@ -374,13 +374,13 @@ Invoke-Step -When 6 -DoTitle 'Creating container-registry: Import' -DoScript {
         --resource-group $__ACR_IMPORT_RG `
         --registry $__ACR_IMPORT `
         --name $__ACR_IMPORT_TASK `
-        --file $__ACR_TASK_YAML `
         --context $__ACR_IMPORT_GIT `
         --git-access-token $__GIT_TOKEN_VALUE `
-        --set "FROM_REGISTRY_URL=$__ACR_PUBLIC_URL/" `
-        --assign-identity `
+        --assign-identity '[system]' `
         --commit-trigger-enabled false `
-        --base-image-trigger-enabled true
+        --base-image-trigger-enabled true `
+        --file $__ACR_TASK_YAML `
+        --set "FROM_REGISTRY_URL=$__ACR_PUBLIC_URL/"
 
     AzCli acr task credential add `
         --subscription $__SUBSCRIPTION `
@@ -491,9 +491,10 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --resource-group $__ACR_TARGET_RG `
         --registry $__ACR_TARGET `
         --name $__ACR_TARGET_TASK `
-        --file $__ACR_TASK_YAML `
         --context $__ACR_TARGET_GIT `
         --git-access-token $__GIT_TOKEN_VALUE `
+        --assign-identity '[system]' `
+        --file $__ACR_TASK_YAML `
         --set "FROM_REGISTRY_URL=$__ACR_IMPORT_URL/" `
         --set "TARGET_IMAGEREPO=$__ACR_TARGET_REPO" `
         --set "DEPLOY_USERNAME_URL=https://$__AKV.vault.azure.net/secrets/$__ACR_TARGET_USER" `
@@ -502,7 +503,6 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --set "ACI_LOC=$__ACI_LOC" `
         --set "ACI_RG=$__ACI_RG" `
         --set "ACI_NAME=$__ACI_NAME" `
-        --assign-identity `
         --query '.name'
 
     AzCli acr task credential add `
