@@ -74,7 +74,7 @@ $__AKV_RG = "$__AKV-rg"
 
 # define Git-token constants
 $__GIT_TOKEN = 'Sut-Git-token'
-$__GIT_TOKEN_VALUE = '9096922a832e3e65478724770464a3ff109294a9'
+$__GIT_TOKEN_VALUE = '4c8152476a10fbcda11309d986aea347bb9f751b'
 
 # define container-registry constants
 $__ACR_DOCKER_URL = 'docker.io'
@@ -185,7 +185,7 @@ Invoke-Step -When 1 -DoTitle 'Initializing subscription: Az-Cli' -DoScript {
 
     function Get-AzCliSub () {
         try {
-            AzCli account show --query 'name' | Write-Info -Color DarkGray --output 'tsv'
+            AzCli account show --query 'name' --output tsv
         } catch {
             ''
         }
@@ -197,7 +197,7 @@ Invoke-Step -When 1 -DoTitle 'Initializing subscription: Az-Cli' -DoScript {
     if ($__SUB_CLI -ne $__SUBSCRIPTION) {
         Write-Verbose "Subscription => '$__SUBSCRIPTION'"
 
-        AzCli account set --subscription $__SUBSCRIPTION --debug --verbose
+        AzCli account set --subscription $__SUBSCRIPTION
 
         $__SUB_CLI = Get-AzCliSub
         if ($__SUB_CLI -ne $__SUBSCRIPTION) {
@@ -334,7 +334,7 @@ Invoke-Step -When 5 -DoTitle 'Creating container-registry: Public' -DoScript {
         --registry $__ACR_PUBLIC `
         --name $__ACR_PUBLIC_TASK `
         --context "$__ACR_PUBLIC_GIT" `
-        --git-access-token "$__GIT_TOKEN_VALUE" `
+        --git-access-token $__GIT_TOKEN_VALUE `
         --assign-identity '[system]' `
         --commit-trigger-enabled true `
         --base-image-trigger-enabled false `
