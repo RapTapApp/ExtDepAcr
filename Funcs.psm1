@@ -310,7 +310,7 @@ function Remove-WhenFoundAzResource {
     )
 
     process {
-        if (-not ([string]::IsNullOrWhiteSpace($ResourceName))) {
+        if ([string]::IsNullOrWhiteSpace($ResourceName)) {
             return
         }
 
@@ -327,9 +327,10 @@ function Remove-WhenFoundAzResource {
         $__Deleted = $__Found | Remove-AzResource -Force -ErrorAction SilentlyContinue
         if (-not $__Deleted) {
             Write-LogLine '[FAILED!]' -Color Red
-        }
 
-        Write-LogLine '[SUCCES!]' -Color Green
+        } else {
+            Write-LogLine '[SUCCES!]' -Color Green
+        }
     }
 }
 
@@ -349,7 +350,7 @@ function Remove-WhenFoundAzResourceGroup {
     )
 
     process {
-        if (-not ([string]::IsNullOrWhiteSpace($RgName))) {
+        if ([string]::IsNullOrWhiteSpace($RgName)) {
             return
         }
 
@@ -366,9 +367,10 @@ function Remove-WhenFoundAzResourceGroup {
         $__Deleted = $__Found | Remove-AzResourceGroup -Force -ErrorAction SilentlyContinue
         if (-not $__Deleted) {
             Write-LogLine '[FAILED!]' -Color Red
-        }
 
-        Write-LogLine '[SUCCES!]' -Color Green
+        } else {
+            Write-LogLine '[SUCCES!]' -Color Green
+        }
     }
 }
 

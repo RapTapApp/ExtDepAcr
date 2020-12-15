@@ -83,7 +83,7 @@ $__ACR_TASK_YAML = 'acr-task.yaml'
 $__ACR_PUBLIC = 'SutAcrPublic'
 $__ACR_PUBLIC_RG = "$__ACR_PUBLIC-rg"
 $__ACR_PUBLIC_TASK = "$__ACR_PUBLIC-task"
-$__ACR_PUBLIC_GIT = 'https://github.com/RapTapApp/ExtDepAcr-0-Public.git#main'
+$__ACR_PUBLIC_GIT = 'https://github.com/RapTapApp/ExtDepAcr-0-Public.git'
 $__ACR_PUBLIC_URL = "$__ACR_PUBLIC.azurecr.io"
 $__ACR_PUBLIC_USER = "$__ACR_PUBLIC-user"
 $__ACR_PUBLIC_PASS = "$__ACR_PUBLIC-pass"
@@ -92,7 +92,7 @@ $__ACR_PUBLIC_PASS = "$__ACR_PUBLIC-pass"
 $__ACR_IMPORT = 'SutAcrImport'
 $__ACR_IMPORT_RG = "$__ACR_IMPORT-rg"
 $__ACR_IMPORT_TASK = "$__ACR_IMPORT-task"
-$__ACR_IMPORT_GIT = 'https://github.com/RapTapApp/ExtDepAcr-1-Import.git#main'
+$__ACR_IMPORT_GIT = 'https://github.com/RapTapApp/ExtDepAcr-1-Import.git'
 $__ACR_IMPORT_URL = "$__ACR_IMPORT.azurecr.io"
 $__ACR_IMPORT_USER = "$__ACR_IMPORT-user"
 $__ACR_IMPORT_PASS = "$__ACR_IMPORT-pass"
@@ -101,7 +101,7 @@ $__ACR_IMPORT_PASS = "$__ACR_IMPORT-pass"
 $__ACR_TARGET = 'SutAcrTarget'
 $__ACR_TARGET_RG = "$__ACR_TARGET-rg"
 $__ACR_TARGET_TASK = "$__ACR_TARGET-task"
-$__ACR_TARGET_GIT = 'https://github.com/RapTapApp/ExtDepAcr-0-Target.git#main'
+$__ACR_TARGET_GIT = 'https://github.com/RapTapApp/ExtDepAcr-2-Target.git'
 $__ACR_TARGET_URL = "$__ACR_TARGET.azurecr.io"
 $__ACR_TARGET_USER = "$__ACR_TARGET-user"
 $__ACR_TARGET_PASS = "$__ACR_TARGET-pass"
@@ -215,14 +215,14 @@ Invoke-Step -When 3 -DoTitle 'Removing all' -DoScript {
         Write-Host ' ! - Removing all' -ForegroundColor Red
 
         Write-Verbose 'Resources'
-        @(AzCli resource list --subscription $__SUBSCRIPTION --query [].name | ConvertFrom-Json) +
+        # @(AzCli resource list --subscription $__SUBSCRIPTION --query [].name | ConvertFrom-Json) +
         @($__ACR_PUBLIC, $__ACR_IMPORT, $__ACR_TARGET, $__AKV, $__ACI, $__ACI_NAME) |
             Remove-WhenFoundAzResource
 
 
 
         Write-Verbose 'Resource-groups'
-        @(AzCli group list --subscription $__SUBSCRIPTION --query [].name | ConvertFrom-Json) +
+        # @(AzCli group list --subscription $__SUBSCRIPTION --query [].name | ConvertFrom-Json) +
         @($__ACR_PUBLIC_RG, $__ACR_IMPORT_RG, $__ACR_TARGET_RG, $__AKV_RG, $__ACI_RG) |
             Remove-WhenFoundAzResourceGroup
 
@@ -301,8 +301,10 @@ Invoke-Step -When 5 -DoTitle 'Creating container-registry: Public' -DoScript {
         --file $__ACR_TASK_YAML `
         --context $__ACR_PUBLIC_GIT `
         --git-access-token $__GIT_TOKEN_VALUE `
-        --set "FROM_REGISTRY_URL=$__ACR_DOCKER_URL/" `
-        --assign-identity
+        --set FROM_REGISTRY_URL=$__ACR_DOCKER_URL/ `
+        --assign-identity `
+        --commit-trigger-enabled true `
+        --base-image-trigger-enabled false
 
 
 
@@ -376,7 +378,9 @@ Invoke-Step -When 6 -DoTitle 'Creating container-registry: Import' -DoScript {
         --context $__ACR_IMPORT_GIT `
         --git-access-token $__GIT_TOKEN_VALUE `
         --set "FROM_REGISTRY_URL=$__ACR_PUBLIC_URL/" `
-        --assign-identity
+        --assign-identity `
+        --commit-trigger-enabled false `
+        --base-image-trigger-enabled true
 
     AzCli acr task credential add `
         --subscription $__SUBSCRIPTION `
