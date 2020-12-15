@@ -214,7 +214,9 @@ function Invoke-Executable {
     # To prevent a 'terminating error' when redirecting StdErr e.g. '2>&1'
     $ErrorActionPreference = [ActionPreference]::Continue
     try {
-        Write-Debug " <== Cmd: '$CmdName' @ Args: $($CmdArgs | Join-String -OutputPrefix "'" -Separator "' '" -OutputSuffix "'")"
+        if ($__State.Log) {
+            Write-Info -Message "   Executing => $CmdName $CmdArgs" -Color DarkGray
+        }
 
         & $CmdName $CmdArgs
 
@@ -243,6 +245,10 @@ function Invoke-Az {
         [object[]] $CmdArgs
     )
 
+    if ($__State.LogAll) {
+        $CmdArgs += @('--debug', '--verbose')
+    }
+
     try {
         Invoke-Executable -CmdName 'az' -CmdArgs $CmdArgs
 
@@ -258,8 +264,13 @@ Export-ModuleMember -Function 'Invoke-Az'
 # ---------------------------------------------------------------------------------------------
 function Invoke-AzCli {
 
+    $CmdArgs = $Args
+    if ($__State.LogAll) {
+        $CmdArgs += @('--debug', '--verbose')
+    }
+
     try {
-        Invoke-Executable -CmdName 'az' -CmdArgs $Args
+        Invoke-Executable -CmdName 'az' -CmdArgs $CmdArgs
 
     } catch {
         throw $PSItem

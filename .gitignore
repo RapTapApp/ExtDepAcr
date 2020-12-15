@@ -11,9 +11,11 @@
 # Ignore test output (test run & code coverage)
 *.run.xml
 *.cov.xml
-# Ignore temporary folders
+
+# Ignore temporary, config, logs folders
 .temp/*
-temp/*
+.config/*
+.logs/*
 
 # Ignore key files (certificate, code signing)
 *.crt

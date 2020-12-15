@@ -13,6 +13,7 @@ param(
 )
 
 Set-StrictMode -Version latest
+Clear-Host
 
 
 
@@ -73,7 +74,7 @@ $__AKV_RG = "$__AKV-rg"
 
 # define Git-token constants
 $__GIT_TOKEN = 'Sut-Git-token'
-$__GIT_TOKEN_VALUE = '3af8500224119b890c3f3b7ba0f3224ef8d672fb'
+$__GIT_TOKEN_VALUE = '9096922a832e3e65478724770464a3ff109294a9'
 
 # define container-registry constants
 $__ACR_DOCKER_URL = 'docker.io'
@@ -83,7 +84,7 @@ $__ACR_TASK_YAML = 'acr-task.yaml'
 $__ACR_PUBLIC = 'SutAcrPublic'
 $__ACR_PUBLIC_RG = "$__ACR_PUBLIC-rg"
 $__ACR_PUBLIC_TASK = "$__ACR_PUBLIC-task"
-$__ACR_PUBLIC_GIT = 'https://github.com/RapTapApp/ExtDepAcr-0-Public.git'
+$__ACR_PUBLIC_GIT = 'https://github.com/RapTapApp/ExtDepAcr-0-Public.git#main'
 $__ACR_PUBLIC_URL = "$__ACR_PUBLIC.azurecr.io"
 $__ACR_PUBLIC_USER = "$__ACR_PUBLIC-user"
 $__ACR_PUBLIC_PASS = "$__ACR_PUBLIC-pass"
@@ -92,7 +93,7 @@ $__ACR_PUBLIC_PASS = "$__ACR_PUBLIC-pass"
 $__ACR_IMPORT = 'SutAcrImport'
 $__ACR_IMPORT_RG = "$__ACR_IMPORT-rg"
 $__ACR_IMPORT_TASK = "$__ACR_IMPORT-task"
-$__ACR_IMPORT_GIT = 'https://github.com/RapTapApp/ExtDepAcr-1-Import.git'
+$__ACR_IMPORT_GIT = 'https://github.com/RapTapApp/ExtDepAcr-1-Import.git#main'
 $__ACR_IMPORT_URL = "$__ACR_IMPORT.azurecr.io"
 $__ACR_IMPORT_USER = "$__ACR_IMPORT-user"
 $__ACR_IMPORT_PASS = "$__ACR_IMPORT-pass"
@@ -101,7 +102,7 @@ $__ACR_IMPORT_PASS = "$__ACR_IMPORT-pass"
 $__ACR_TARGET = 'SutAcrTarget'
 $__ACR_TARGET_RG = "$__ACR_TARGET-rg"
 $__ACR_TARGET_TASK = "$__ACR_TARGET-task"
-$__ACR_TARGET_GIT = 'https://github.com/RapTapApp/ExtDepAcr-2-Target.git'
+$__ACR_TARGET_GIT = 'https://github.com/RapTapApp/ExtDepAcr-2-Target.git#main'
 $__ACR_TARGET_URL = "$__ACR_TARGET.azurecr.io"
 $__ACR_TARGET_USER = "$__ACR_TARGET-user"
 $__ACR_TARGET_PASS = "$__ACR_TARGET-pass"
@@ -116,19 +117,48 @@ $__ACI_NAME = 'my-app-container'
 
 
 
+$__ConfigDir = Join-Path -Path $PSScriptRoot -ChildPath '.config'
+if (-not (Test-Path $__ConfigDir)) {
+    Write-Verbose "Creating '.config' folder"
+    mkdir $__ConfigDir | Out-Null
+}
+
+$__LogsDir = Join-Path -Path $PSScriptRoot -ChildPath '.logs'
+if (-not (Test-Path $__LogsDir)) {
+    Write-Verbose "Creating '.logs' folder"
+    mkdir $__LogsDir | Out-Null
+}
+
+
+
 # ---------------------------------------------------------------------------------------------
 Invoke-Step -When 0 -DoTitle 'Initializing Az-Cli tool' -DoScript {
 
-    $__TempFolder = Join-Path -Path $PSScriptRoot -ChildPath '.temp'
-    if (-not (Test-Path $__TempFolder)) {
-        Write-Verbose "Creating '.temp' folder"
-        mkdir $__TempFolder | Out-Null
+    $Env:AZURE_CONFIG_DIR = $__ConfigDir
+
+    if (Test-Path (Join-Path $__ConfigDir -ChildPath 'config')) {
+        return
     }
+
+    try {
+        AzCli account clear
+        Write-Verbose 'Cleared account'
+    } catch {
+        Write-Verbose 'Unable to clear account'
+    }
+
+    try {
+        AzCli logout
+        Write-Verbose 'Logged out'
+    } catch {
+        Write-Verbose 'Unable to log out'
+    }
+
+    AzCli login --query '[].name' | Write-Info -Color DarkGray
+    Write-Verbose 'Logged in'
 
 
     Write-Verbose 'Setting config'
-    $Env:AZURE_CONFIG_DIR = $__TempFolder
-
     # Disable warning output (e.g. from preview commands)
     AzCli config set core.only_show_errors=false
 
@@ -136,7 +166,7 @@ Invoke-Step -When 0 -DoTitle 'Initializing Az-Cli tool' -DoScript {
     AzCli config set core.no_color=false
 
     # Enable logging
-    AzCli config set "\`"logging.log_dir=$__TempFolder\`""
+    AzCli config set "logging.log_dir=$__LogsDir\"
     AzCli config set logging.enable_log_file=true
 
     # Install devops cli extension
@@ -152,9 +182,10 @@ Invoke-Step -When 0 -DoTitle 'Initializing Az-Cli tool' -DoScript {
 # ---------------------------------------------------------------------------------------------
 Invoke-Step -When 1 -DoTitle 'Initializing subscription: Az-Cli' -DoScript {
 
+
     function Get-AzCliSub () {
         try {
-            AzCli account show --query 'name' --output 'tsv'
+            AzCli account show --query 'name' | Write-Info -Color DarkGray --output 'tsv'
         } catch {
             ''
         }
@@ -166,8 +197,7 @@ Invoke-Step -When 1 -DoTitle 'Initializing subscription: Az-Cli' -DoScript {
     if ($__SUB_CLI -ne $__SUBSCRIPTION) {
         Write-Verbose "Subscription => '$__SUBSCRIPTION'"
 
-        AzCli login
-        AzCli account set --subscription $__SUBSCRIPTION
+        AzCli account set --subscription $__SUBSCRIPTION --debug --verbose
 
         $__SUB_CLI = Get-AzCliSub
         if ($__SUB_CLI -ne $__SUBSCRIPTION) {
@@ -255,20 +285,23 @@ Invoke-Step -When 4 -DoTitle 'Creating key-vault' -DoScript {
     AzCli group create `
         --subscription $__SUBSCRIPTION `
         --location $__LOCATION `
-        --name $__AKV_RG | Out-Null
+        --name $__AKV_RG `
+        --query 'name' | Write-Info -Color DarkGray
 
     AzCli keyvault create `
         --subscription $__SUBSCRIPTION `
         --location $__LOCATION `
         --resource-group $__AKV_RG `
-        --name $__AKV
+        --name $__AKV `
+        --query 'name' | Write-Info -Color DarkGray
 
     Write-Verbose 'Setting secret: Git-token'
     AzCli keyvault secret set `
         --subscription $__SUBSCRIPTION `
         --vault-name $__AKV `
         --name $__GIT_TOKEN `
-        --value $__GIT_TOKEN_VALUE
+        --value $__GIT_TOKEN_VALUE `
+        --query 'name' | Write-Info -Color DarkGray
 }
 
 
@@ -281,14 +314,16 @@ Invoke-Step -When 5 -DoTitle 'Creating container-registry: Public' -DoScript {
     AzCli group create `
         --subscription $__SUBSCRIPTION `
         --location $__LOCATION `
-        --name $__ACR_PUBLIC_RG | Out-Null
+        --name $__ACR_PUBLIC_RG `
+        --query 'name' | Write-Info -Color DarkGray
 
     AzCli acr create `
         --subscription $__SUBSCRIPTION `
         --location $__LOCATION `
         --resource-group $__ACR_PUBLIC_RG `
         --name $__ACR_PUBLIC `
-        --sku 'Premium'
+        --sku 'Premium' `
+        --query 'name' | Write-Info -Color DarkGray
 
 
 
@@ -298,13 +333,14 @@ Invoke-Step -When 5 -DoTitle 'Creating container-registry: Public' -DoScript {
         --resource-group $__ACR_PUBLIC_RG `
         --registry $__ACR_PUBLIC `
         --name $__ACR_PUBLIC_TASK `
-        --context $__ACR_PUBLIC_GIT `
-        --git-access-token $__GIT_TOKEN_VALUE `
+        --context "$__ACR_PUBLIC_GIT" `
+        --git-access-token "$__GIT_TOKEN_VALUE" `
         --assign-identity '[system]' `
         --commit-trigger-enabled true `
         --base-image-trigger-enabled false `
         --file $__ACR_TASK_YAML `
-        --set "FROM_REGISTRY_URL=$__ACR_DOCKER_URL/"
+        --set "FROM_REGISTRY_URL=$__ACR_DOCKER_URL/" `
+        --query 'name' | Write-Info -Color DarkGray
 
 
 
@@ -338,13 +374,15 @@ Invoke-Step -When 5 -DoTitle 'Creating container-registry: Public' -DoScript {
         --subscription $__SUBSCRIPTION `
         --vault-name $__AKV `
         --name $__ACR_PUBLIC_USER `
-        --value $__ACR_PUBLIC_USER
+        --value $__ACR_PUBLIC_USER `
+        --query 'name' | Write-Info -Color DarkGray
 
     AzCli keyvault secret set `
         --subscription $__SUBSCRIPTION `
         --vault-name $__AKV `
         --name $__ACR_PUBLIC_PASS `
-        --value $__ACR_PUBLIC_PASS_VALUE
+        --value $__ACR_PUBLIC_PASS_VALUE `
+        --query 'name' | Write-Info -Color DarkGray
 }
 
 
@@ -357,14 +395,16 @@ Invoke-Step -When 6 -DoTitle 'Creating container-registry: Import' -DoScript {
     AzCli group create `
         --subscription $__SUBSCRIPTION `
         --location $__LOCATION `
-        --name $__ACR_IMPORT_RG | Out-Null
+        --name $__ACR_IMPORT_RG `
+        --query 'name' | Write-Info -Color DarkGray
 
     AzCli acr create `
         --subscription $__SUBSCRIPTION `
         --location $__LOCATION `
         --resource-group $__ACR_IMPORT_RG `
         --name $__ACR_IMPORT `
-        --sku 'Premium'
+        --sku 'Premium' `
+        --query 'name' | Write-Info -Color DarkGray
 
 
 
@@ -374,13 +414,14 @@ Invoke-Step -When 6 -DoTitle 'Creating container-registry: Import' -DoScript {
         --resource-group $__ACR_IMPORT_RG `
         --registry $__ACR_IMPORT `
         --name $__ACR_IMPORT_TASK `
-        --context $__ACR_IMPORT_GIT `
-        --git-access-token $__GIT_TOKEN_VALUE `
+        --context "$__ACR_IMPORT_GIT" `
+        --git-access-token "$__GIT_TOKEN_VALUE" `
         --assign-identity '[system]' `
         --commit-trigger-enabled false `
         --base-image-trigger-enabled true `
         --file $__ACR_TASK_YAML `
-        --set "FROM_REGISTRY_URL=$__ACR_PUBLIC_URL/"
+        --set "FROM_REGISTRY_URL=$__ACR_PUBLIC_URL/" `
+        --query 'name' | Write-Info -Color DarkGray
 
     AzCli acr task credential add `
         --subscription $__SUBSCRIPTION `
@@ -390,7 +431,8 @@ Invoke-Step -When 6 -DoTitle 'Creating container-registry: Import' -DoScript {
         --login-server $__ACR_PUBLIC_URL `
         --username "https://$__AKV.vault.azure.net/secrets/$__ACR_PUBLIC_USER" `
         --password "https://$__AKV.vault.azure.net/secrets/$__ACR_PUBLIC_PASS" `
-        --use-identity '[system]'
+        --use-identity '[system]' `
+        --query 'name' | Write-Info -Color DarkGray
 
 
 
@@ -410,7 +452,8 @@ Invoke-Step -When 6 -DoTitle 'Creating container-registry: Import' -DoScript {
         --resource-group $__AKV_RG `
         --name $__AKV `
         --object-id $__ACR_IMPORT_TASK_ID `
-        --secret-permissions 'get'
+        --secret-permissions 'get' `
+        --query 'name' | Write-Info -Color DarkGray
 
 
 
@@ -444,13 +487,15 @@ Invoke-Step -When 6 -DoTitle 'Creating container-registry: Import' -DoScript {
         --subscription $__SUBSCRIPTION `
         --vault-name $__AKV `
         --name $__ACR_IMPORT_USER `
-        --value $__ACR_IMPORT_USER
+        --value $__ACR_IMPORT_USER `
+        --query 'name' | Write-Info -Color DarkGray
 
     AzCli keyvault secret set `
         --subscription $__SUBSCRIPTION `
         --vault-name $__AKV `
         --name $__ACR_IMPORT_PASS `
-        --value $__ACR_IMPORT_PASS_VALUE
+        --value $__ACR_IMPORT_PASS_VALUE `
+        --query 'name' | Write-Info -Color DarkGray
 }
 
 
@@ -464,7 +509,7 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --subscription $__SUBSCRIPTION `
         --location $__LOCATION `
         --name $__ACR_TARGET_RG `
-        --query '.name'
+        --query 'name' | Write-Info -Color DarkGray
 
     AzCli acr create `
         --subscription $__SUBSCRIPTION `
@@ -472,7 +517,7 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --resource-group $__ACR_TARGET_RG `
         --name $__ACR_TARGET `
         --sku 'Premium' `
-        --query '.name'
+        --query 'name' | Write-Info -Color DarkGray
 
 
 
@@ -481,7 +526,7 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --subscription $__SUBSCRIPTION `
         --location $__LOCATION `
         --name $__ACI_RG `
-        --query '.name'
+        --query 'name' | Write-Info -Color DarkGray
 
 
 
@@ -491,8 +536,8 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --resource-group $__ACR_TARGET_RG `
         --registry $__ACR_TARGET `
         --name $__ACR_TARGET_TASK `
-        --context $__ACR_TARGET_GIT `
-        --git-access-token $__GIT_TOKEN_VALUE `
+        --context "$__ACR_TARGET_GIT" `
+        --git-access-token "$__GIT_TOKEN_VALUE" `
         --assign-identity '[system]' `
         --file $__ACR_TASK_YAML `
         --set "FROM_REGISTRY_URL=$__ACR_IMPORT_URL/" `
@@ -503,7 +548,7 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --set "ACI_LOC=$__ACI_LOC" `
         --set "ACI_RG=$__ACI_RG" `
         --set "ACI_NAME=$__ACI_NAME" `
-        --query '.name'
+        --query 'name' | Write-Info -Color DarkGray
 
     AzCli acr task credential add `
         --subscription $__SUBSCRIPTION `
@@ -514,7 +559,7 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --username "https://$__AKV.vault.azure.net/secrets/$__ACR_IMPORT_USER" `
         --password "https://$__AKV.vault.azure.net/secrets/$__ACR_IMPORT_PASS" `
         --use-identity '[system]' `
-        --query '.name'
+        --query 'name' | Write-Info -Color DarkGray
 
 
 
@@ -535,7 +580,7 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --name $__AKV `
         --object-id $__ACR_TARGET_TASK_ID `
         --secret-permissions 'get' `
-        --query '.name'
+        --query 'name' | Write-Info -Color DarkGray
 
 
 
@@ -551,7 +596,7 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --assignee $__ACR_TARGET_TASK_ID `
         --scope $__ACI_RG_ID `
         --role 'owner' `
-        --query '.name'
+        --query 'name' | Write-Info -Color DarkGray
 
 
 
@@ -572,14 +617,14 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --vault-name $__AKV `
         --name $__ACR_TARGET_USER `
         --value $__ACR_TARGET_USER `
-        --query '.name'
+        --query 'name' | Write-Info -Color DarkGray
 
     AzCli keyvault secret set `
         --subscription $__SUBSCRIPTION `
         --vault-name $__AKV `
         --name $__ACR_TARGET_PASS `
         --value $__ACR_TARGET_PASS_VALUE `
-        --query '.name'
+        --query 'name' | Write-Info -Color DarkGray
 
 
 
