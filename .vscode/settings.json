@@ -1,0 +1,186 @@
+{
+    /*
+
+    ---------- IDE: Language: Overrides -------- */
+    "[json]": {
+        "editor.tabSize": 2
+    },
+    "[markdown]": {
+        "files.insertFinalNewline": false,
+        "files.trimFinalNewlines": false,
+        "files.trimTrailingWhitespace": false
+    },
+    "[xml]": {
+        "editor.tabSize": 2
+    },
+    "[yaml]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "none"
+    },
+    /*
+
+    ---------- IDE: Language: File mappings -------- */
+    "files.associations": {
+        "**/*.yml": "azure-pipelines",
+        "**/*.psm1": "powershell",
+        "**/*.psd1": "powershell",
+        "**/*.ps1": "powershell"
+    },
+    //-------- IDE: Editor --------
+    "explorer.sortOrder": "filesFirst",
+    "editor.formatOnSave": true,
+    "editor.smoothScrolling": true,
+    "editor.semanticHighlighting.enabled": true,
+    "editor.semanticTokenColorCustomizations": {
+        "enabled": true
+    },
+    /*
+    ---------- IDE: Editor : Indentation -------- */
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    /*
+
+    ---------- IDE: Files -------- */
+    "files.defaultLanguage": "",
+    "files.enableTrash": true,
+    "files.encoding": "utf8bom",
+    /*
+    ---------- IDE: Files : Whitespace -------- */
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    /*
+    ---------- IDE: Files : Exclude (from explorer tree) -------- */
+    "files.exclude": {
+        // IDE
+        ".vs/*": true,
+        "**/*.TempPoint.ps1": true,
+        // Temporary
+        "**/.temp/*": true,
+        // Build: intermediate & output
+        "**/.int/*": true,
+        "**/.out/*": true,
+        // Test: run & coverage
+        "**/*.cov.xml": true,
+        "**/*.run.xml": true
+    },
+    /*
+
+    ---------- IDE: Search -------- */
+    "search.exclude": {
+        // IDE
+        ".vs/*": true,
+        "**/*.TempPoint.ps1": true,
+        // Temporary
+        "**/.temp/*": true,
+        // Build: intermediate & output
+        "**/.int/*": true,
+        "**/.out/*": true,
+        // Test: run & coverage
+        "**/*.cov.xml": true,
+        "**/*.run.xml": true
+    },
+    /*
+
+    ---------- IDE: Terminal -------- */
+    "terminal.explorerKind": "external",
+    "terminal.integrated.scrollback": 1000,
+    "terminal.integrated.enableBell": true,
+    "terminal.integrated.allowChords": false,
+    "terminal.integrated.automationShell.windows": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "terminal.integrated.automationShell.linux": "/usr/bin/pwsh",
+    "terminal.integrated.automationShell.osx": "/usr/local/bin/pwsh",
+    "terminal.integrated.shell.windows": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "terminal.integrated.shell.linux": "/usr/bin/pwsh",
+    "terminal.integrated.shell.osx": "/usr/local/bin/pwsh",
+    /*
+
+    ---------- Ext: Azure-Functions -------- */
+    "azureFunctions.deploySubpath": "Functions",
+    "azureFunctions.projectLanguage": "PowerShell",
+    "azureFunctions.projectRuntime": "~3",
+    "debug.internalConsoleOptions": "neverOpen",
+    /*
+
+    ---------- Ext: Azure-Pipelines -------- */
+    "[azure-pipelines].customSchemaFile": "./.vscode/extensions/Azure-Pipelines.schema.json",
+    /*
+
+    ---------- Ext: Coverage-gutters -------- */
+    "coverage-gutters.coverageFileNames": [
+        "*.cov.xml"
+    ],
+    "coverage-gutters.customizable.context-menu": true,
+    "coverage-gutters.customizable.status-bar-toggler-watchCoverageAndVisibleEditors-enabled": true,
+    "coverage-gutters.showGutterCoverage": false,
+    "coverage-gutters.showLineCoverage": true,
+    "coverage-gutters.showRulerCoverage": true,
+    /*
+    ---------- Ext: Coverage-gutters : Dark theme -------- */
+    "coverage-gutters.noHighlightDark": "rgba(256,25,60,0.15)",
+    "coverage-gutters.highlightdark": "rgba(60,256,25,0.15)",
+    "coverage-gutters.partialHighlightDark": "rgba(250,256,30,0.4)",
+    /*
+    ---------- Ext: Coverage-gutters : Light theme -------- */
+    "coverage-gutters.noHighlightLight": "rgba(220, 143, 143, 0.75)",
+    "coverage-gutters.highlightlight": "rgba(220, 143, 143, 0.75)",
+    "coverage-gutters.partialHighlightLight": "rgba(220, 213, 143, 0.75)",
+    /*
+
+    ---------- Ext: PowerShell -------- */
+    "powershell.powerShellDefaultVersion": "7",
+    "powershell.enableProfileLoading": false,
+    "powershell.helpCompletion": "LineComment",
+    "powershell.startAutomatically": true,
+    "powershell.buttons.showPanelMovementButtons": false,
+    "powershell.buttons.showRunButtons": true,
+    /*
+
+    ---------- Ext: PowerShell: Code-folding -------- */
+    "powershell.codeFolding.enable": true,
+    "powershell.codeFolding.showLastLine": false,
+    /*
+    ---------- Ext: PowerShell: Code-formatting -------- */
+    "powershell.codeFormatting.preset": "OTBS",
+    "powershell.codeFormatting.pipelineIndentationStyle": "IncreaseIndentationForFirstPipeline",
+    "powershell.codeFormatting.ignoreOneLineBlock": false,
+    "powershell.codeFormatting.autoCorrectAliases": true,
+    "powershell.codeFormatting.useConstantStrings": true,
+    "powershell.codeFormatting.useCorrectCasing": true,
+    /*
+    ---------- Ext: PowerShell: Code-formatting: Whitespace -------- */
+    "powershell.codeFormatting.alignPropertyValuePairs": true,
+    "powershell.codeFormatting.addWhitespaceAroundPipe": true,
+    "powershell.codeFormatting.newLineAfterCloseBrace": true,
+    "powershell.codeFormatting.newLineAfterOpenBrace": true,
+    "powershell.codeFormatting.openBraceOnSameLine": true,
+    "powershell.codeFormatting.trimWhitespaceAroundPipe": true,
+    "powershell.codeFormatting.whitespaceAfterSeparator": true,
+    "powershell.codeFormatting.whitespaceAroundOperator": true,
+    "powershell.codeFormatting.whitespaceBeforeOpenBrace": true,
+    "powershell.codeFormatting.whitespaceBeforeOpenParen": true,
+    "powershell.codeFormatting.whitespaceBetweenParameters": false,
+    "powershell.codeFormatting.whitespaceInsideBrace": true,
+    /*
+
+    ---------- Ext: PowerShell: Debugging -------- */
+    "powershell.debugging.createTemporaryIntegratedConsole": false,
+    /*
+    ---------- Ext: PowerShell: Integrated-console -------- */
+    "powershell.integratedConsole.focusConsoleOnExecute": true,
+    "powershell.integratedConsole.forceClearScrollbackBuffer": true,
+    "powershell.integratedConsole.showOnStartup": false,
+    "powershell.integratedConsole.suppressStartupBanner": false,
+    "powershell.integratedConsole.useLegacyReadLine": false,
+    /*
+    ---------- Ext: PowerShell: Pester -------- */
+    "powershell.pester.debugOutputVerbosity": "Diagnostic",
+    "powershell.pester.outputVerbosity": "Normal",
+    "powershell.pester.useLegacyCodeLens": false,
+    /*
+    ---------- Ext: PowerShell: Script-analysis -------- */
+    "powershell.scriptAnalysis.enable": true,
+    "powershell.scriptAnalysis.settingsPath": "./.vscode/extensions/Pwsh.ScriptAnalysis.settings.psd1"
+}

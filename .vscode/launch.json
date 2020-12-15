@@ -1,0 +1,73 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        // Pwsh: Launch: Debug from VsCode-[interactive session]
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Pwsh: Debug from VsCode-[interactive session]",
+            "cwd": "${workspaceRoot}"
+        },
+        // Pwsh: Launch: Run current file
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Pwsh: Run current file",
+            "script": "${file}",
+            "cwd": "${file}"
+        },
+        // Pwsh: Launch: Run current file (in temporary console)"
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Pwsh: Run current file (in temporary console)",
+            "script": "${file}",
+            "cwd": "${file}",
+            "createTemporaryIntegratedConsole": true
+        },
+        // Pwsh: Launch: Run current file (with args prompt)
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Pwsh: Run current file (with args prompt)",
+            "script": "${file}",
+            "args": [
+                "${command:SpecifyScriptArgs}"
+            ],
+            "cwd": "${file}"
+        },
+        // Pwsh: Launch: Run unit tests of each 'Module'
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Pwsh: Run unit tests of each 'Module'",
+            "script": "Import-Module ./.vscode/tasks.psm1; Invoke-VsTaskRunUnitTestsOfEachModule",
+            "cwd": "${workspaceRoot}"
+        },
+        // Pwsh: Launch: Run unit tests of current 'Module'
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Pwsh: Run unit tests of current 'Module'",
+            "script": "Import-Module ./.vscode/tasks.psm1; Invoke-VsTaskRunUnitTestsOfCurrentModule -CurrentFolderPath '${fileDirname}'",
+            "cwd": "${workspaceRoot}"
+        },
+        // Pwsh: Attach: Azure PowerShell function
+        {
+            "type": "PowerShell",
+            "name": "Pwsh: Attach to Azure PowerShell function",
+            "request": "attach",
+            "customPipeName": "AzureFunctionsPSWorker",
+            "runspaceId": 1,
+            "preLaunchTask": "func: host start"
+        },
+        // Pwsh: Attach: Selected host process
+        {
+            "type": "PowerShell",
+            "request": "attach",
+            "name": "Pwsh: Attach to selected host process",
+            "processId": "${command:PickPSHostProcess}",
+            "runspaceId": 1
+        }
+    ]
+}

@@ -1,0 +1,170 @@
+// https://code.visualstudio.com/docs/editor/tasks#_custom-tasks
+{
+    "version": "2.0.0",
+    "windows": {
+        "options": {
+            "shell": {
+                "executable": "C:/Program Files/PowerShell/7/pwsh.exe",
+                "args": [
+                    "-NoProfile -ExecutionPolicy Bypass -Command"
+                ]
+            }
+        }
+    },
+    "linux": {
+        "options": {
+            "shell": {
+                "executable": "/usr/bin/pwsh",
+                "args": [
+                    "-NoProfile",
+                    "-Command"
+                ]
+            }
+        }
+    },
+    "osx": {
+        "options": {
+            "shell": {
+                "executable": "/usr/local/bin/pwsh",
+                "args": [
+                    "-NoProfile",
+                    "-Command"
+                ]
+            }
+        }
+    },
+    "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "revealProblems": "onProblem",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": true
+    },
+    "tasks": [
+        // Test: Pwsh: Analyze all scripts
+        {
+            "type": "shell",
+            "label": "Test: Pwsh: Analyze all scripts",
+            "command": [
+                "Import-Module ./.vscode/tasks.psm1; Invoke-VsTaskAnalyzeAllPowerShellScripts"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "test",
+            "problemMatcher": {
+                "owner": "powershell",
+                "source": "PSScriptAnalyzer",
+                "fileLocation": "absolute",
+                "pattern": [
+                    {
+                        "regexp": "^([^\\s].*)\\((\\d+),(\\d+)\\)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3
+                    },
+                    {
+                        "regexp": "^\\s+\\[(error|warning|info)\\] (.*): (.*)$",
+                        "severity": 1,
+                        "code": 2,
+                        "message": 3
+                    }
+                ]
+            }
+        },
+        // Test: Pwsh: Analyze all scripts & -ApplyFix
+        {
+            "type": "shell",
+            "label": "Test: Pwsh: Analyze all scripts & -ApplyFix",
+            "command": [
+                "Import-Module ./.vscode/tasks.psm1; Invoke-VsTaskAnalyzeAllPowerShellScripts -ApplyFix"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "test",
+            "problemMatcher": {
+                "owner": "powershell",
+                "source": "PSScriptAnalyzer",
+                "fileLocation": "absolute",
+                "pattern": [
+                    {
+                        "regexp": "^([^\\s].*)\\((\\d+),(\\d+)\\)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3
+                    },
+                    {
+                        "regexp": "^\\s+\\[(error|warning|info)\\] (.*): (.*)$",
+                        "severity": 1,
+                        "code": 2,
+                        "message": 3
+                    }
+                ]
+            }
+        },
+        // Test: Pwsh: Run unit tests of all modules
+        {
+            "type": "shell",
+            "label": "Test: Pwsh: Run unit tests of all modules",
+            "command": [
+                "Import-Module ./.vscode/tasks.psm1; Invoke-VsTaskRunUnitTestsOfAllModules"
+            ],
+            "group": "test",
+            "problemMatcher": {
+                "owner": "powershell",
+                "source": "Pester",
+                "fileLocation": "absolute",
+                "pattern": [
+                    {
+                        "message": 1,
+                        "regexp": "^\\s*\\[-\\]\\s+(.+)$"
+                    },
+                    {
+                        "regexp": ".*"
+                    },
+                    {
+                        "file": 2,
+                        "line": 3,
+                        "regexp": "^\\s*[Aa]t\\s+([^,]+,\\s*)?(.+?):(\\d+)$"
+                    }
+                ],
+                "severity": "error"
+            }
+        },
+        // Test: Pwsh: Run unit tests of current module
+        {
+            "type": "shell",
+            "label": "Test: Pwsh: Run unit tests of current module",
+            "command": [
+                "Import-Module ./.vscode/tasks.psm1; Invoke-VsTaskRunUnitTestsOfCurrentModule -CurrentFolderPath '${fileDirname}'"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "owner": "powershell",
+                "source": "Pester",
+                "fileLocation": "absolute",
+                "pattern": [
+                    {
+                        "message": 1,
+                        "regexp": "^\\s*\\[-\\]\\s+(.+)$"
+                    },
+                    {
+                        "regexp": ".*"
+                    },
+                    {
+                        "file": 2,
+                        "line": 3,
+                        "regexp": "^\\s*[Aa]t\\s+([^,]+,\\s*)?(.+?):(\\d+)$"
+                    }
+                ],
+                "severity": "error"
+            }
+        }
+    ]
+}
