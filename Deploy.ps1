@@ -73,7 +73,7 @@ $__AKV_RG = "$__AKV-rg"
 
 # define Git-token constants
 $__GIT_TOKEN = 'Sut-Git-token'
-$__GIT_TOKEN_VALUE = '7c0165e8aae0ff5fd49c74841c900a809284621e'
+$__GIT_TOKEN_VALUE = '3af8500224119b890c3f3b7ba0f3224ef8d672fb'
 
 # define container-registry constants
 $__ACR_DOCKER_URL = 'docker.io'
@@ -130,7 +130,7 @@ Invoke-Step -When 0 -DoTitle 'Initializing Az-Cli tool' -DoScript {
     $Env:AZURE_CONFIG_DIR = $__TempFolder
 
     # Disable warning output (e.g. from preview commands)
-    AzCli config set core.only_show_errors=true
+    AzCli config set core.only_show_errors=false
 
     # Disable color output (Fails when running in parallel)
     AzCli config set core.no_color=false
@@ -152,15 +152,24 @@ Invoke-Step -When 0 -DoTitle 'Initializing Az-Cli tool' -DoScript {
 # ---------------------------------------------------------------------------------------------
 Invoke-Step -When 1 -DoTitle 'Initializing subscription: Az-Cli' -DoScript {
 
-    $__SUB_CLI = AzCli account show --query 'name' --output 'tsv'
+    function Get-AzCliSub () {
+        try {
+            AzCli account show --query 'name' --output 'tsv'
+        } catch {
+            ''
+        }
+    }
+
+    $__SUB_CLI = Get-AzCliSub
     Write-Verbose "Subscription is '$__SUB_CLI'"
 
     if ($__SUB_CLI -ne $__SUBSCRIPTION) {
         Write-Verbose "Subscription => '$__SUBSCRIPTION'"
 
+        AzCli login
         AzCli account set --subscription $__SUBSCRIPTION
 
-        $__SUB_CLI = AzCli account show --query 'name' --output 'tsv'
+        $__SUB_CLI = Get-AzCliSub
         if ($__SUB_CLI -ne $__SUBSCRIPTION) {
             throw [InvalidOperationException] "Az-Cli: Failed changing subscription to '$__SUBSCRIPTION'"
         }
@@ -206,14 +215,14 @@ Invoke-Step -When 3 -DoTitle 'Removing all' -DoScript {
         Write-Host ' ! - Removing all' -ForegroundColor Red
 
         Write-Verbose 'Resources'
-        @(az resource list --subscription $__SUBSCRIPTION --query [].name | ConvertFrom-Json) +
+        @(AzCli resource list --subscription $__SUBSCRIPTION --query [].name | ConvertFrom-Json) +
         @($__ACR_PUBLIC, $__ACR_IMPORT, $__ACR_TARGET, $__AKV, $__ACI, $__ACI_NAME) |
             Remove-WhenFoundAzResource
 
 
 
         Write-Verbose 'Resource-groups'
-        @(az group list --subscription $__SUBSCRIPTION --query [].name | ConvertFrom-Json) +
+        @(AzCli group list --subscription $__SUBSCRIPTION --query [].name | ConvertFrom-Json) +
         @($__ACR_PUBLIC_RG, $__ACR_IMPORT_RG, $__ACR_TARGET_RG, $__AKV_RG, $__ACI_RG) |
             Remove-WhenFoundAzResourceGroup
 
@@ -450,14 +459,16 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
     AzCli group create `
         --subscription $__SUBSCRIPTION `
         --location $__LOCATION `
-        --name $__ACR_TARGET_RG | Out-Null
+        --name $__ACR_TARGET_RG `
+        --query '.name'
 
     AzCli acr create `
         --subscription $__SUBSCRIPTION `
         --location $__LOCATION `
         --resource-group $__ACR_TARGET_RG `
         --name $__ACR_TARGET `
-        --sku 'Premium'
+        --sku 'Premium' `
+        --query '.name'
 
 
 
@@ -465,7 +476,8 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
     AzCli group create `
         --subscription $__SUBSCRIPTION `
         --location $__LOCATION `
-        --name $__ACI_RG | Out-Null
+        --name $__ACI_RG `
+        --query '.name'
 
 
 
@@ -486,7 +498,8 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --set "ACI_LOC=$__ACI_LOC" `
         --set "ACI_RG=$__ACI_RG" `
         --set "ACI_NAME=$__ACI_NAME" `
-        --assign-identity
+        --assign-identity `
+        --query '.name'
 
     AzCli acr task credential add `
         --subscription $__SUBSCRIPTION `
@@ -496,7 +509,8 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --login-server $__ACR_IMPORT_URL `
         --username "https://$__AKV.vault.azure.net/secrets/$__ACR_IMPORT_USER" `
         --password "https://$__AKV.vault.azure.net/secrets/$__ACR_IMPORT_PASS" `
-        --use-identity '[system]'
+        --use-identity '[system]' `
+        --query '.name'
 
 
 
@@ -516,7 +530,8 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --resource-group $__AKV_RG `
         --name $__AKV `
         --object-id $__ACR_TARGET_TASK_ID `
-        --secret-permissions 'get'
+        --secret-permissions 'get' `
+        --query '.name'
 
 
 
@@ -531,7 +546,8 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
     AzCli role assignment create `
         --assignee $__ACR_TARGET_TASK_ID `
         --scope $__ACI_RG_ID `
-        --role 'owner'
+        --role 'owner' `
+        --query '.name'
 
 
 
@@ -551,13 +567,15 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --subscription $__SUBSCRIPTION `
         --vault-name $__AKV `
         --name $__ACR_TARGET_USER `
-        --value $__ACR_TARGET_USER
+        --value $__ACR_TARGET_USER `
+        --query '.name'
 
     AzCli keyvault secret set `
         --subscription $__SUBSCRIPTION `
         --vault-name $__AKV `
         --name $__ACR_TARGET_PASS `
-        --value $__ACR_TARGET_PASS_VALUE
+        --value $__ACR_TARGET_PASS_VALUE `
+        --query '.name'
 
 
 
