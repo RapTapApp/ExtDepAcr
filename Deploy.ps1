@@ -56,6 +56,8 @@ $PSDefaultParameterValues = @{
     'Write-Debug:Debug'     = $LogAll.IsPresent -or $Log.IsPresent
 }
 
+Set-Location "$PSScriptRoot"
+
 
 
 # ---------------------------------------------------------------------------------------------
@@ -115,45 +117,40 @@ $__ACI_NAME = 'my-app-container'
 
 
 # ---------------------------------------------------------------------------------------------
-if ($RemoveAll.IsPresent) {
-    Write-Host ' ! - Removing all' -ForegroundColor Red
+Invoke-Step -When 0 -DoTitle 'Initializing Az-Cli tool' -DoScript {
 
-    Write-Verbose 'Resources'
-    @(az resource list --subscription $__SUBSCRIPTION --query [].name | ConvertFrom-Json) +
-    @($__ACR_PUBLIC, $__ACR_IMPORT, $__ACR_TARGET, $__AKV, $__ACI, $__ACI_NAME) |
-        Remove-WhenFoundAzResource
-
-
-
-    Write-Verbose 'Resource-groups'
-    @(az group list --subscription $__SUBSCRIPTION --query [].name | ConvertFrom-Json) +
-    @($__ACR_PUBLIC_RG, $__ACR_IMPORT_RG, $__ACR_TARGET_RG, $__AKV_RG, $__ACI_RG) |
-        Remove-WhenFoundAzResourceGroup
+    $__TempFolder = Join-Path -Path $PSScriptRoot -ChildPath '.temp'
+    if (-not (Test-Path $__TempFolder)) {
+        Write-Verbose "Creating '.temp' folder"
+        mkdir $__TempFolder | Out-Null
+    }
 
 
+    Write-Verbose 'Setting config'
+    $Env:AZURE_CONFIG_DIR = $__TempFolder
 
-    Write-Verbose 'Purge key-vault'
-    Az keyvault purge `
-        --subscription $__SUBSCRIPTION `
-        --location $__LOCATION `
-        --name $__AKV `
-        --only-show-errors
+    # Disable warning output (e.g. from preview commands)
+    AzCli config set core.only_show_errors=true
+
+    # Disable color output (Fails when running in parallel)
+    AzCli config set core.no_color=false
+
+    # Enable logging
+    AzCli config set "\`"logging.log_dir=$__TempFolder\`""
+    AzCli config set logging.enable_log_file=true
+
+    # Install devops cli extension
+    $__InstalledExtensions = @(AzCli extension list --query '[].name' | ConvertFrom-Json)
+    if ('azure-devops' -notin $__InstalledExtensions) {
+        Write-Verbose "Installing 'azure-devops' extention"
+        AzCli extension add --name 'azure-devops'
+    }
 }
 
 
 
 # ---------------------------------------------------------------------------------------------
-if (-not $DeployAll.IsPresent) {
-
-    Write-Warning '-DeployAll not specied.'
-    Write-Verbose 'Exiting deployment script'
-    exit 1
-}
-
-
-
-# ---------------------------------------------------------------------------------------------
-Invoke-Step -When 0 -DoTitle 'Init subscription: Az-Cli' -DoScript {
+Invoke-Step -When 1 -DoTitle 'Initializing subscription: Az-Cli' -DoScript {
 
     $__SUB_CLI = AzCli account show --query 'name' --output 'tsv'
     Write-Verbose "Subscription is '$__SUB_CLI'"
@@ -175,7 +172,7 @@ Invoke-Step -When 0 -DoTitle 'Init subscription: Az-Cli' -DoScript {
 
 
 # ---------------------------------------------------------------------------------------------
-Invoke-Step -When 1 -DoTitle 'Init subscription: Az-Pwsh' -DoScript {
+Invoke-Step -When 2 -DoTitle 'Initializing subscription: Az-Pwsh' -DoScript {
 
     $__SUB_PWSH = Get-AzContext | ForEach-Object Subscription | ForEach-Object Name
     Write-Verbose "Subscription is '$__SUB_PWSH'"
@@ -203,7 +200,48 @@ Invoke-Step -When 1 -DoTitle 'Init subscription: Az-Pwsh' -DoScript {
 
 
 # ---------------------------------------------------------------------------------------------
-Invoke-Step -When 2 -DoTitle 'Creating key-vault' -DoScript {
+Invoke-Step -When 3 -DoTitle 'Removing all' -DoScript {
+
+    if ($RemoveAll.IsPresent) {
+        Write-Host ' ! - Removing all' -ForegroundColor Red
+
+        Write-Verbose 'Resources'
+        @(az resource list --subscription $__SUBSCRIPTION --query [].name | ConvertFrom-Json) +
+        @($__ACR_PUBLIC, $__ACR_IMPORT, $__ACR_TARGET, $__AKV, $__ACI, $__ACI_NAME) |
+            Remove-WhenFoundAzResource
+
+
+
+        Write-Verbose 'Resource-groups'
+        @(az group list --subscription $__SUBSCRIPTION --query [].name | ConvertFrom-Json) +
+        @($__ACR_PUBLIC_RG, $__ACR_IMPORT_RG, $__ACR_TARGET_RG, $__AKV_RG, $__ACI_RG) |
+            Remove-WhenFoundAzResourceGroup
+
+
+
+        Write-Verbose 'Purge key-vault'
+        Az keyvault purge `
+            --subscription $__SUBSCRIPTION `
+            --location $__LOCATION `
+            --name $__AKV `
+            --only-show-errors
+    }
+}
+
+
+
+# ---------------------------------------------------------------------------------------------
+if (-not $DeployAll.IsPresent) {
+
+    Write-Warning '-DeployAll not specied.'
+    Write-Verbose 'Exiting deployment script'
+    exit 1
+}
+
+
+
+# ---------------------------------------------------------------------------------------------
+Invoke-Step -When 4 -DoTitle 'Creating key-vault' -DoScript {
 
     AzCli group create `
         --subscription $__SUBSCRIPTION `
@@ -227,7 +265,7 @@ Invoke-Step -When 2 -DoTitle 'Creating key-vault' -DoScript {
 
 
 # ---------------------------------------------------------------------------------------------
-Invoke-Step -When 3 -DoTitle 'Creating container-registry: Public' -DoScript {
+Invoke-Step -When 5 -DoTitle 'Creating container-registry: Public' -DoScript {
 
     Remove-WhenFoundAzResourceGroup $__ACR_PUBLIC_RG
 
@@ -301,7 +339,7 @@ Invoke-Step -When 3 -DoTitle 'Creating container-registry: Public' -DoScript {
 
 
 # ---------------------------------------------------------------------------------------------
-Invoke-Step -When 4 -DoTitle 'Creating container-registry: Import' -DoScript {
+Invoke-Step -When 6 -DoTitle 'Creating container-registry: Import' -DoScript {
 
     Remove-WhenFoundAzResourceGroup $__ACR_IMPORT_RG
 
@@ -405,7 +443,7 @@ Invoke-Step -When 4 -DoTitle 'Creating container-registry: Import' -DoScript {
 
 
 # ---------------------------------------------------------------------------------------------
-Invoke-Step -When 5 -DoTitle 'Creating container-registry: Target' -DoScript {
+Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
 
     Remove-WhenFoundAzResourceGroup $__ACR_TARGET_RG
 

@@ -1,0 +1,35 @@
+# IDE: VS code: Ignore changed workspace settings, etc
+.vscode
+.vscode/*
+
+# IDE: Sapien PowerShell Studio: Ignore autosave files
+*.TempPoint.ps1
+
+# IDE: Visual Studio: Ignore temporary files
+.vs/*
+
+# Ignore test output (test run & code coverage)
+*.run.xml
+*.cov.xml
+# Ignore temporary folders
+.temp/*
+temp/*
+
+# Ignore key files (certificate, code signing)
+*.crt
+*.cer
+*.key
+*.pfx
+*.p7b
+*.p7c
+*.pem
+*.snk
+
+# Ignore Windows specific files & folders
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/*
+
+# Ignore Mac specific files
+.DS_Store
