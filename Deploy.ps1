@@ -77,42 +77,41 @@ $__GIT_TOKEN = 'Sut-Git-token'
 $__GIT_TOKEN_VALUE = $(Get-Content -LiteralPath "$PSCommandPath.key" -Raw).Trim()
 
 # define container-registry constants
-$__ACR_DOCKER_URL = 'docker.io'
 $__ACR_TASK_YAML = 'acr-task.yaml'
 
 # define container-registry: public constants
-$__ACR_PUBLIC = 'SutAcrPublic'
+$__ACR_PUBLIC = 'SutAcr0Public'
 $__ACR_PUBLIC_RG = "$__ACR_PUBLIC-rg"
 $__ACR_PUBLIC_TASK = "$__ACR_PUBLIC-task"
 $__ACR_PUBLIC_GIT = 'https://github.com/RapTapApp/ExtDepAcr-0-Public.git#main'
-$__ACR_PUBLIC_URL = "$__ACR_PUBLIC.azurecr.io"
+$__ACR_PUBLIC_URL = 'SutAcr0Public.azurecr.io'
 $__ACR_PUBLIC_USER = "$__ACR_PUBLIC-user"
 $__ACR_PUBLIC_PASS = "$__ACR_PUBLIC-pass"
 
 # define container-registry: import constants
-$__ACR_IMPORT = 'SutAcrImport'
+$__ACR_IMPORT = 'SutAcr1Import'
 $__ACR_IMPORT_RG = "$__ACR_IMPORT-rg"
 $__ACR_IMPORT_TASK = "$__ACR_IMPORT-task"
 $__ACR_IMPORT_GIT = 'https://github.com/RapTapApp/ExtDepAcr-1-Import.git#main'
-$__ACR_IMPORT_URL = "$__ACR_IMPORT.azurecr.io"
+$__ACR_IMPORT_URL = 'SutAcr1Import.azurecr.io'
 $__ACR_IMPORT_USER = "$__ACR_IMPORT-user"
 $__ACR_IMPORT_PASS = "$__ACR_IMPORT-pass"
 
 # define container-registry: target constants
-$__ACR_TARGET = 'SutAcrTarget'
+$__ACR_TARGET = 'SutAcr2Target'
 $__ACR_TARGET_RG = "$__ACR_TARGET-rg"
 $__ACR_TARGET_TASK = "$__ACR_TARGET-task"
 $__ACR_TARGET_GIT = 'https://github.com/RapTapApp/ExtDepAcr-2-Target.git#main'
 $__ACR_TARGET_USER = "$__ACR_TARGET-user"
 $__ACR_TARGET_PASS = "$__ACR_TARGET-pass"
-$__ACR_TARGET_REPO = 'my-app-repo'
+$__ACR_TARGET_REPO = 'target-app'
 
 # define container-instance constants
 $__ACI = 'SutAci'
 $__ACI_RG = "$__ACI-rg"
 $__ACI_SUB = $__SUBSCRIPTION
 $__ACI_LOC = $__LOCATION
-$__ACI_NAME = 'my-app-container'
+$__ACI_NAME = 'running-target-app'
 
 
 
@@ -338,9 +337,8 @@ Invoke-Step -When 5 -DoTitle 'Creating container-registry: Public' -DoScript {
         --commit-trigger-enabled true `
         --base-image-trigger-enabled false `
         --file $__ACR_TASK_YAML `
-        --set "FROM_REGISTRY_URL=$__ACR_DOCKER_URL/" `
-        --image 'node:15-alpine' `
-        --image 'node:15-alpine-{{.Run.ID}}' |
+        --image 'docker-sim/node:15-alpine' `
+        --image 'docker-sim/node:15-alpine-{{.Run.ID}}' |
         Write-Info -Color Magenta
 
 
@@ -421,9 +419,8 @@ Invoke-Step -When 6 -DoTitle 'Creating container-registry: Import' -DoScript {
         --commit-trigger-enabled true `
         --base-image-trigger-enabled true `
         --file $__ACR_TASK_YAML `
-        --set "FROM_REGISTRY_URL=$__ACR_PUBLIC_URL/" `
-        --image 'node:15-alpine' `
-        --image 'node:15-alpine-{{.Run.ID}}' |
+        --image 'imported-images/node:15-alpine' `
+        --image 'imported-images/node:15-alpine-{{.Run.ID}}' |
         Write-Info -Color Magenta
 
     AzCli acr task credential add `
@@ -543,15 +540,13 @@ Invoke-Step -When 7 -DoTitle 'Creating container-registry: Target' -DoScript {
         --context "$__ACR_TARGET_GIT" `
         --git-access-token "$__GIT_TOKEN_VALUE" `
         --file $__ACR_TASK_YAML `
-        --set "FROM_REGISTRY_URL=$__ACR_IMPORT_URL/" `
-        --set "TARGET_IMAGEREPO=$__ACR_TARGET_REPO" `
         --set "DEPLOY_USERNAME_URL=https://$__AKV.vault.azure.net/secrets/$__ACR_TARGET_USER" `
         --set "DEPLOY_PASSWORD_URL=https://$__AKV.vault.azure.net/secrets/$__ACR_TARGET_PASS" `
         --set "ACI_SUB=$__ACI_SUB" `
         --set "ACI_LOC=$__ACI_LOC" `
         --set "ACI_RG=$__ACI_RG" `
         --set "ACI_NAME=$__ACI_NAME" `
-        --image '{{.Values.TARGET_IMAGEREPO}}:{{.Run.ID}}' |
+        --image 'target-app-builds/target-app:{{.Run.ID}}' |
         Write-Info -Color Magenta
 
     AzCli acr task credential add `
