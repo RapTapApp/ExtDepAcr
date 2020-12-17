@@ -353,7 +353,7 @@ Invoke-Step -When 5 -DoTitle 'Creating container-registry: Public' -DoScript {
     Write-Verbose "Finished running task => Showing tags of 'node' repository"
     AzCli acr repository show-tags `
         --name $__ACR_PUBLIC `
-        --repository 'node'
+        --repository 'docker-sim/node'
 
 
 
@@ -467,7 +467,7 @@ Invoke-Step -When 6 -DoTitle 'Creating container-registry: Import' -DoScript {
     Write-Verbose "Finished running task => Showing tags of 'node' repository"
     AzCli acr repository show-tags `
         --name $__ACR_IMPORT `
-        --repository 'node'
+        --repository 'imported-images/node'
 
 
 
